@@ -1,15 +1,16 @@
 {
+  "engines": {
+    "node": ">=20"
+  },
   "name": "invoice-builder",
   "version": "1.0.0",
   "description": "Professional Invoice Builder",
   "main": "index.js",
   "scripts": {
-    "build": "npx tailwindcss -i ./input.css -o ./output.css",
-    "start": "npx tailwindcss -i ./input.css -o ./output.css --watch"
+    "build": "npx @tailwindcss/cli -i ./input.css -o ./output.css",
+    "start": "npx @tailwindcss/cli -i ./input.css -o ./output.css --watch"
   },
   "devDependencies": {
-    "autoprefixer": "^10.4.27",
-    "postcss": "^8.5.8",
     "tailwindcss": "^4.2.2"
   }
 }
