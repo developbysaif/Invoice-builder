@@ -7,8 +7,8 @@
   "description": "Professional Invoice Builder",
   "main": "index.js",
   "scripts": {
-    "build": "npx @tailwindcss/cli -i ./input.css -o ./output.css",
-    "start": "npx @tailwindcss/cli -i ./input.css -o ./output.css --watch"
+    "build": "tailwindcss -i ./input.css -o ./output.css",
+    "start": "tailwindcss -i ./input.css -o ./output.css --watch"
   },
   "devDependencies": {
     "tailwindcss": "^4.2.2"
