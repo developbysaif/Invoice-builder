@@ -1,7 +1,4 @@
 {
-  "engines": {
-    "node": ">=20"
-  },
   "name": "invoice-builder",
   "version": "1.0.0",
   "description": "Professional Invoice Builder",
@@ -10,7 +7,9 @@
     "build": "tailwindcss -i ./input.css -o ./output.css",
     "start": "tailwindcss -i ./input.css -o ./output.css --watch"
   },
+  "author": "Your Name",
+  "license": "MIT",
   "devDependencies": {
-    "tailwindcss": "^4.2.2"
+    "tailwindcss": "^3.4.0"
   }
 }
