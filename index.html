@@ -3,11 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Free Invoice Builder</title>
+    <meta name="description" content="Free Professional Invoice Builder - Create, manage, and download professional invoices in minutes. No credit card required.">
+    <meta name="keywords" content="invoice, builder, free invoice, professional invoice, pdf invoice, billing">
+    <title>Free Invoice Builder | Professional & Fast</title>
     <link rel="stylesheet" href="output.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #1e3a8a 0%, #065f46 100%);
+            --accent: #10b981;
+        }
         @keyframes fadeIn {
             from { opacity: 0; transform: scale(0.95); }
             to { opacity: 1; transform: scale(1); }
@@ -205,33 +211,52 @@
     </div>
 
     <!-- Home Container -->
-    <div id="homeContainer" class="min-h-screen hidden items-center justify-center p-5">
-        <div class="w-full max-w-6xl">
-            <!-- Home Page -->
-            <div id="homePage" class="bg-white dark:bg-gray-800 rounded-xl shadow-xl overflow-hidden w-full mx-auto">
-                <div class="bg-primary-gradient text-white p-8 text-center">
-                    <h1 class="font-bold text-4xl mb-4">Free Invoice Builder</h1>
-                    <p class="text-xl opacity-90">Create professional invoices in minutes</p>
-                </div>
+    <div id="homeContainer" class="min-h-screen hidden items-center justify-center p-5 relative overflow-hidden">
+        <!-- Background Decoration -->
+        <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-blue-900 to-emerald-900 -z-10"></div>
+        <div class="absolute top-[-10%] right-[-10%] w-[40%] h-[40%] bg-white opacity-5 blur-[100px] rounded-full"></div>
+        <div class="absolute bottom-[-10%] left-[-10%] w-[30%] h-[30%] bg-emerald-400 opacity-5 blur-[100px] rounded-full"></div>
 
-                <div class="p-8">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                        <div class="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg hover-lift">
-                            <i class="fas fa-file-invoice text-4xl text-accent mb-4"></i>
-                            <h3 class="text-xl font-semibold mb-2 text-gray-800 dark:text-white">Easy Invoice Creation</h3>
-                            <p class="text-gray-600 dark:text-gray-300">Quickly create professional invoices with our intuitive builder.</p>
+        <div class="w-full max-w-6xl z-10">
+            <!-- Home Page -->
+            <div id="homePage" class="bg-white/90 dark:bg-gray-800/90 backdrop-blur-md rounded-2xl shadow-2xl overflow-hidden w-full mx-auto border border-white/20">
+                <div class="grid grid-cols-1 lg:grid-cols-2">
+                    <div class="p-12 flex flex-col justify-center">
+                        <h1 class="font-extrabold text-5xl mb-6 text-gray-900 dark:text-white leading-tight">
+                            Build <span class="text-accent">Professional</span> Invoices in Seconds
+                        </h1>
+                        <p class="text-xl text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
+                            The simplest way to manage your billing. No registration required to start. Perfect for freelancers and small businesses.
+                        </p>
+                        <div class="flex flex-wrap gap-4">
+                            <button id="getStartedBtn" class="bg-accent text-white px-10 py-4 rounded-xl font-bold text-lg hover:bg-green-600 transition-all hover-lift shadow-lg shadow-green-200 dark:shadow-none inline-flex items-center gap-2">
+                                <i class="fas fa-rocket"></i> Get Started Free
+                            </button>
+                            <button class="bg-white dark:bg-gray-700 text-gray-800 dark:text-white border border-gray-200 dark:border-gray-600 px-10 py-4 rounded-xl font-bold text-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-all hover-lift">
+                                View Templates
+                            </button>
                         </div>
-                        <div class="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg hover-lift">
-                            <i class="fas fa-cloud-download-alt text-4xl text-accent mb-4"></i>
-                            <h3 class="text-xl font-semibold mb-2 text-gray-800 dark:text-white">Download & Share</h3>
-                            <p class="text-gray-600 dark:text-gray-300">Download your invoices as PDF or share them directly with clients.</p>
+                        
+                        <div class="mt-12 flex items-center gap-6 text-sm text-gray-500">
+                            <span class="flex items-center gap-1"><i class="fas fa-check text-accent"></i> No credit card</span>
+                            <span class="flex items-center gap-1"><i class="fas fa-check text-accent"></i> Unlimited invoices</span>
+                            <span class="flex items-center gap-1"><i class="fas fa-check text-accent"></i> PDF export</span>
                         </div>
                     </div>
-
-                    <div class="text-center">
-                        <button id="getStartedBtn" class="bg-accent text-white px-8 py-3 rounded-lg font-medium text-lg hover:bg-green-600 transition-colors inline-flex items-center gap-2">
-                            <i class="fas fa-rocket"></i> Get Started Now
-                        </button>
+                    <div class="bg-gray-100 dark:bg-gray-900 p-4 lg:p-12 flex items-center justify-center relative">
+                        <img src="invoice_builder_hero_1776395905754.png" alt="Invoice Builder UI" class="rounded-xl shadow-2xl hover-lift border border-white/10">
+                        <!-- Floating badge -->
+                        <div class="absolute bottom-16 right-16 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-xl animate-bounce hidden sm:block border border-gray-100 dark:border-gray-700">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-green-600">
+                                    <i class="fas fa-dollar-sign"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500">Total Revenue</p>
+                                    <p class="font-bold text-gray-900 dark:text-white">$12,450.00</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

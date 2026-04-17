@@ -176,8 +176,103 @@ document.addEventListener('DOMContentLoaded', function () {
                 invoiceBuilderContainer.classList.add('hidden');
                 document.body.classList.remove('bg-cyan-950', 'dark:bg-gray-900');
                 document.body.classList.add('bg-gray-50', 'dark:bg-gray-900');
+                populateDashboardTable();
             }
 
+            function populateDashboardTable() {
+                const tableBody = document.querySelector('#dashboardContainer table tbody');
+                const savedInvoices = JSON.parse(localStorage.getItem('allInvoices') || '[]');
+                
+                if (savedInvoices.length === 0) {
+                    tableBody.innerHTML = `
+                        <tr>
+                            <td colspan="6" class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
+                                <i class="fas fa-file-invoice text-4xl mb-3 text-accent"></i>
+                                <p>No invoices created yet</p>
+                                <button id="createFirstInvoiceBtn" class="mt-4 bg-accent text-white px-6 py-2 rounded-lg hover:bg-green-600 transition-colors">
+                                    Create Your First Invoice
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                    document.getElementById('createFirstInvoiceBtn')?.addEventListener('click', showInvoiceBuilder);
+                    return;
+                }
+
+                tableBody.innerHTML = '';
+                savedInvoices.forEach((invoice, index) => {
+                    const row = document.createElement('tr');
+                    row.className = 'hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer';
+                    row.innerHTML = `
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">#${invoice.invoiceNumber}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">Professional</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">${invoice.receiver.name}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">${invoice.issueDate}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">${invoice.dueDate}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-accent font-semibold">${invoice.total}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <button class="text-gray-600 hover:text-accent mr-3 view-invoice" data-index="${index}"><i class="fas fa-eye"></i></button>
+                            <button class="text-red-600 hover:text-red-800 delete-invoice" data-index="${index}"><i class="fas fa-trash"></i></button>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+
+                // Add event listeners
+                document.querySelectorAll('.view-invoice').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const idx = btn.dataset.index;
+                        loadInvoice(savedInvoices[idx]);
+                    });
+                });
+
+                document.querySelectorAll('.delete-invoice').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        if (confirm('Are you sure you want to delete this invoice?')) {
+                            const idx = btn.dataset.index;
+                            savedInvoices.splice(idx, 1);
+                            localStorage.setItem('allInvoices', JSON.stringify(savedInvoices));
+                            populateDashboardTable();
+                        }
+                    });
+                });
+            }
+
+            function loadInvoice(invoiceData) {
+                // Pre-fill builder with data
+                document.getElementById('invoiceNumber').value = invoiceData.invoiceNumber;
+                document.getElementById('issueDate').value = invoiceData.issueDate;
+                document.getElementById('dueDate').value = invoiceData.dueDate;
+                document.getElementById('senderName').textContent = invoiceData.sender.name;
+                document.getElementById('senderDetails').textContent = invoiceData.sender.details;
+                document.getElementById('receiverName').textContent = invoiceData.receiver.name;
+                document.getElementById('receiverDetails').textContent = invoiceData.receiver.details;
+                document.getElementById('invoiceTerms').value = invoiceData.terms;
+                document.getElementById('currencySelect').value = invoiceData.currency;
+                
+                const tableBody = document.querySelector('#invoiceTable tbody');
+                tableBody.innerHTML = '';
+                invoiceData.items.forEach(item => {
+                    const row = tableBody.insertRow();
+                    row.innerHTML = `
+                        <td class="p-2 border-b dark:border-gray-600"><input type="text" value="${item.item}" class="w-full border dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded px-2 py-1 text-sm"></td>
+                        <td class="p-2 border-b dark:border-gray-600 text-right"><input type="number" value="${item.qty}" class="w-16 text-right border dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded px-2 py-1 text-sm qty"></td>
+                        <td class="p-2 border-b dark:border-gray-600 text-right"><input type="number" value="${item.price}" class="w-20 text-right border dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded px-2 py-1 text-sm price"></td>
+                        <td class="p-2 border-b dark:border-gray-600 text-right total">${item.total}</td>
+                        <td class="p-2 border-b dark:border-gray-600 text-center"><button class="text-red-500 hover:text-red-700 remove">&times;</button></td>`;
+                    
+                    row.querySelector('.qty').addEventListener('input', updateTotals);
+                    row.querySelector('.price').addEventListener('input', updateTotals);
+                    row.querySelector('.remove').addEventListener('click', () => { row.remove(); updateTotals(); });
+                });
+                
+                showInvoiceBuilder();
+                updateTotals();
+            }
+
+            let invoiceBuilderInitialized = false;
             // Function to show invoice builder
             function showInvoiceBuilder() {
                 homeContainer.classList.add('hidden');
@@ -187,8 +282,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 document.body.classList.remove('bg-cyan-950', 'dark:bg-gray-900');
                 document.body.classList.add('bg-gray-100', 'dark:bg-gray-900');
                 
-                // Initialize invoice builder functionality
-                initInvoiceBuilder();
+                if (!invoiceBuilderInitialized) {
+                    initInvoiceBuilder();
+                    invoiceBuilderInitialized = true;
+                }
             }
 
             // Make functions globally available
@@ -599,30 +696,24 @@ document.addEventListener('DOMContentLoaded', function () {
                 html2pdf().set(opt).from(element).save();
             });
             
-            // Save invoice
             saveInvoiceBtn.addEventListener('click', () => {
-                // In a real application, you would send data to a server
-                // For this demo, we'll just show an alert
-                alert('Invoice saved successfully!');
-                
-                // You could also save to localStorage for persistence
                 const invoiceData = {
                     invoiceNumber: document.getElementById('invoiceNumber').value,
                     issueDate: document.getElementById('issueDate').value,
                     dueDate: document.getElementById('dueDate').value,
                     sender: {
-                        name: senderName.textContent,
-                        details: senderDetails.textContent
+                        name: document.getElementById('senderName').textContent,
+                        details: document.getElementById('senderDetails').textContent
                     },
                     receiver: {
-                        name: receiverName.textContent,
-                        details: receiverDetails.textContent
+                        name: document.getElementById('receiverName').textContent,
+                        details: document.getElementById('receiverDetails').textContent
                     },
                     items: Array.from(tableBody.querySelectorAll('tr')).map(row => ({
-                        item: row.querySelector('input[type="text"]').value,
-                        qty: row.querySelector('.qty').value,
-                        price: row.querySelector('.price').value,
-                        total: row.querySelector('.total').textContent
+                        item: row.querySelector('input[type="text"]')?.value || '',
+                        qty: row.querySelector('.qty')?.value || '0',
+                        price: row.querySelector('.price')?.value || '0',
+                        total: row.querySelector('.total')?.textContent || '$0.00'
                     })),
                     subtotal: subtotalEl.textContent,
                     tax: taxEl.textContent,
@@ -631,7 +722,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     terms: document.getElementById('invoiceTerms').value
                 };
                 
-                localStorage.setItem('invoiceData', JSON.stringify(invoiceData));
+                const allInvoices = JSON.parse(localStorage.getItem('allInvoices') || '[]');
+                allInvoices.push(invoiceData);
+                localStorage.setItem('allInvoices', JSON.stringify(allInvoices));
+                
+                alert('Invoice saved successfully!');
+                showDashboard();
             });
             
             // Load saved invoice if exists
